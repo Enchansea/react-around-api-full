@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 module.exports = {
   env: {
     node: true,
@@ -11,5 +12,6 @@ module.exports = {
   rules: {
     'no-underscore-dangle': 0,
     'no-console': 0,
+    'object-curly-newline': 0,
   },
 };

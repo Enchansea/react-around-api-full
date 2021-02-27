@@ -1,7 +1,9 @@
-const User = require('../models/user');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
+
 const JWT_SECRET = 'thisisareallyimportantsecret';
+const SALT_ROUND = 10;
 
 const getUsers = (req, res) => User.find({})
   .then((users) => res.status(200).send(users))
@@ -24,16 +26,18 @@ const getUser = (req, res) => {
     });
 };
 
+// eslint-disable-next-line consistent-return
 const createUser = (req, res) => {
-  const { name, about, avatar, email, password } = req.body;
-  bcrypt.hash(req.body.password, 10)
-  .then(hash => User.create({ name, about, avatar, email, password }))  
-  .then((user) => res.status(200).send(user))
-  .catch((err) => {
-     if (err.name === 'ValidationError') {
+  const { email, password, name, about, avatar } = req.body;
+  if (!password || !email) return res.status(400).send({ message: 'invalid data' });
+  bcrypt.hash(password, SALT_ROUND)
+    .then((hash) => User.create({ email, password: hash, name, about, avatar }))
+    .then((user) => res.status(200).send(user))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
         res.status(400).send({ message: err });
-     }
-     res.status(500).send({ message: err });
+      }
+      res.status(500).send({ message: err });
     });
 };
 
@@ -49,17 +53,17 @@ const updateUser = (req, res) => {
 };
 
 const login = (req, res) => {
-  const {email, password} = req.body;
-  return User.findUserByCredentials (email, password)
+  const { email, password } = req.body;
+  return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id}, JWT_SECRET, { expiresIn: 604800 })
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: 604800 });
       res.send({ token });
     })
     .catch((err) => {
       res
         .status(401)
-        .send({message: err});
-     });
+        .send({ message: err });
+    });
 }
 
 module.exports = {
@@ -67,5 +71,5 @@ module.exports = {
   getUser,
   createUser,
   updateUser,
-  login
+  login,
 };

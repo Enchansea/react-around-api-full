@@ -13,5 +13,6 @@ module.exports = {
     'no-underscore-dangle': 0,
     'no-console': 0,
     'object-curly-newline': 0,
+    'linebreak-style': 0,
   },
 };

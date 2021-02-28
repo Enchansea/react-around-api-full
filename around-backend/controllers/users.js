@@ -1,70 +1,81 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const isEmail = require('validator/lib/isEmail');
 const User = require('../models/user');
+const NotFoundError = require('../middlewares/errors/NotFoundError');
+const BadRequestError = require('../middlewares/errors/BadRequestError');
 
-const JWT_SECRET = 'thisisareallyimportantsecret';
+const { NODE_ENV, JWT_SECRET } = process.env;
 const SALT_ROUND = 10;
 
-const getUsers = (req, res) => User.find({})
-  .then((users) => res.status(200).send(users))
-  .catch((err) => res.status(400).send(err));
+const getUsers = (req, res, next) => {
+  User.find({})
+    .then((users) => res.send({ data: users }))
+    .catch(next);
+};
 
-const getUser = (req, res) => {
+const getUser = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
       if (!user) {
-        res.status(404).send({ message: 'No such user found' });
+        throw new NotFoundError('user not found');
       }
-      res.status(200).send(user);
+      res.send({ data: user });
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Bad Request' });
-      } else {
-        res.status(500).send({ message: 'Internal Server Error' });
-      }
-    });
+    .catch(next);
 };
 
 // eslint-disable-next-line consistent-return
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { email, password, name, about, avatar } = req.body;
-  if (!password || !email) return res.status(400).send({ message: 'invalid data' });
+  if (!password || !email) {
+    throw new BadRequestError('invalid data');
+  }
   bcrypt.hash(password, SALT_ROUND)
-    .then((hash) => User.create({ email, password: hash, name, about, avatar }))
-    .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: err });
-      }
-      res.status(500).send({ message: err });
-    });
+    .then((hash) => {
+      User.create({ email, password: hash, name, about, avatar })
+        .then((user) => {
+          if (!user) {
+            throw new BadRequestError('invalid data');
+          } res.status(201).send({
+            _id: user._id,
+            email: user.email,
+          });
+        })
+        .catch(next);
+    })
+    .catch(next);
 };
 
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   User.findByIdAndUpdate(req.params.id, { name: req.params.name, about: req.params.about })
-    .then((user) => res.status(200).send({ data: user }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send(err);
-      }
-      res.status(500).send(err);
-    });
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('user not found');
+      } res.send({ data: user });
+    })
+    .catch(next);
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
+  if (!isEmail(email)) {
+    throw new NotFoundError('incorrect email or password');
+  }
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: 604800 });
+      if (!user) {
+        throw new NotFoundError('incorrect email or password');
+      }
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'Fd5Ic7sEcREtcOde', { expiresIn: 604800 });
+      res.cookie('jwt', token, {
+        maxAge: 360000 * 24 * 7,
+        httpOnly: true,
+      });
       res.send({ token });
     })
-    .catch((err) => {
-      res
-        .status(401)
-        .send({ message: err });
-    });
-}
+    .catch(next);
+};
 
 module.exports = {
   getUsers,

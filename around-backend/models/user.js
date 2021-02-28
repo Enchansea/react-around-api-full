@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema({
       message: 'field "avatar" must be a valid url-address',
     },
     default: 'https://pictures.s3.yandex.net/resources/avatar_1604080799.jpg',
-  }
+  },
 });
 userSchema.statics.findUserByCredentials = function findUserByCredentials(email, password) {
   return this.findOne({ email }).select('+password')

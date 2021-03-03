@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import React, { useEffect, useState, useMemo } from 'react';
+import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
 import Api from '../utils/Api';
 import '../pages/index.css';
 import Header from './Header';
@@ -16,6 +16,8 @@ import InfoToolTip from './InfoToolTip';
 import ProtectedRoute from './ProtectedRoute';
 import * as aroundAuth from '../utils/aroundAuth';
 
+
+
 function App() {
   const [cards, setCards] = useState([]);
 
@@ -31,17 +33,18 @@ function App() {
   const [userEmail, setUserEmail] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
   const [isSuccessful, setIsSuccessful] = useState(false);
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(localStorage.getItem('jwt'));
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const api = new Api({
-    baseUrl: "http://localhost:3001",
-    headers: {
-      'Accept': 'application/json',
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    }
-  });
+  const api = useMemo(() => {
+    return new Api({
+      baseUrl: "http://localhost:3000",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      }
+    })
+  }, [token]);
 
 
   const history = useHistory();
@@ -87,8 +90,7 @@ function App() {
 
   useEffect(() => {
     handleTokenCheck();
-    history.push("/");
-  }, [history, token])
+  }, [token])
 
 
   const onSignOut = () => {
@@ -178,7 +180,9 @@ function App() {
         history.push('/signin');
       }
     })
-    .catch(err => console.log(err))
+    .catch(err => console.log(err));
+    setIsSuccessful(false);
+    setIsInfoToolTipOpen(true);
   }
 
   function handleLogin(email, password) {
@@ -242,6 +246,9 @@ function App() {
               handleCardLike={handleCardLike}
               onClose={closeAllPopups}
                />
+            <Route path="/*">
+              <Redirect to="/signin" />
+            </Route>
           </Switch>
           <Footer />
         </div>

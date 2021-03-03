@@ -1,8 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const cors = require('cors');
-require('dotenv').config();
 
 const app = express();
 const bodyParser = require('body-parser');
@@ -23,17 +23,13 @@ mongoose.connect('mongodb://localhost:27017/aroundb', {
   useUnifiedTopology: true,
 });
 
-const corsOptions = {
-  origin: '*',
-  optionsSuccessStatus: 200,
-};
-
-app.use(express.json(), cors(corsOptions));
+app.use(cors());
+app.options('*', cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
 app.use(helmet());
-app.options('*', cors());
+
 app.post('/signin', login);
 app.post('/signup', createUser);
 app.use(auth);

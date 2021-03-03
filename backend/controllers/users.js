@@ -1,11 +1,11 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const isEmail = require('validator/lib/isEmail');
 const User = require('../models/user');
 const NotFoundError = require('../middlewares/errors/NotFoundError');
 const BadRequestError = require('../middlewares/errors/BadRequestError');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+// const { NODE_ENV, JWT_SECRET } = process.env;
 const SALT_ROUND = 10;
 
 const getUsers = (req, res, next) => {
@@ -67,7 +67,7 @@ const login = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('incorrect email or password');
       }
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'Fd5Ic7sEcREtcOde', { expiresIn: 604800 });
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: 604800 });
       res.cookie('jwt', token, {
         maxAge: 360000 * 24 * 7,
         httpOnly: true,
@@ -84,3 +84,5 @@ module.exports = {
   updateUser,
   login,
 };
+
+// NODE_ENV === 'production' ? JWT_SECRET : 'Fd5Ic7sEcREtcOde'

@@ -10,7 +10,6 @@ function Register (props) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(username, password);
     props.handleSignup(username, password);
 
   }

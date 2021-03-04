@@ -7,11 +7,13 @@ const UnauthorizedError = require('./errors/UnauthorizedError');
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 
-  if (!authorization || !authorization.startsWith('Bearer')) {
+  // console.log('authorization', authorization)
+
+  if (!authorization || !authorization.startsWith('Bearer ')) {
     throw new UnauthorizedError('authorization required');
   }
 
-  const token = authorization.replace('Bearer', '');
+  const token = authorization.replace('Bearer ', '');
   let payload;
   try {
     payload = jwt.verify(token, 'some-secret-key');

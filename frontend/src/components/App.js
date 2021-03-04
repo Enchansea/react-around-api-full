@@ -36,7 +36,6 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem('jwt'));
 
   const api = useMemo(() => {
-    console.log('useMemo here');
     return new Api({
       baseUrl: "http://localhost:3000",
       headers: {
@@ -69,8 +68,6 @@ function App() {
 
       })
       .catch(err => console.log(err));
-
-
   }, [api])
 
   function handleTokenCheck() {
@@ -82,8 +79,9 @@ function App() {
           console.log('Error!');
         }
         setLoggedIn(true);
-        setUserEmail(res.data.email);
+        setUserEmail(res.email);
         setToken(jwt);
+        history.push('/');
       })
       .catch(err => console.log(err))
     }
@@ -91,7 +89,7 @@ function App() {
 
   useEffect(() => {
     handleTokenCheck();
-  }, [token])
+  })
 
 
   const onSignOut = () => {
@@ -117,8 +115,10 @@ function App() {
   }
 
   function handleCardLike(card) {
+    debugger
     const isLiked = card.likes.some(i => i._id === currentUser._id);
     api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+      console.log('here');
       const newCards = cards.map((c) => c._id === card._id ? newCard : c);
       setCards(newCards);
     })

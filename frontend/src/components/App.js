@@ -36,6 +36,7 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem('jwt'));
 
   const api = useMemo(() => {
+    console.log('useMemo here');
     return new Api({
       baseUrl: "http://localhost:3000",
       headers: {

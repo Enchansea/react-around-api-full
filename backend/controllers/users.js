@@ -28,6 +28,7 @@ const getUser = (req, res, next) => {
 // eslint-disable-next-line consistent-return
 const createUser = (req, res, next) => {
   const { email, password, name, about, avatar } = req.body;
+  console.log('signup backend');
   if (!password || !email) {
     throw new BadRequestError('invalid data');
   }
@@ -58,6 +59,7 @@ const updateUser = (req, res, next) => {
 };
 
 const login = (req, res, next) => {
+  console.log('login');
   const { email, password } = req.body;
   if (!isEmail(email)) {
     throw new NotFoundError('incorrect email or password');

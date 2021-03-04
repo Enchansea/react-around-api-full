@@ -1,0 +1,18 @@
+@import url('./__input/login__input.css');
+@import url('./__title/login__title.css');
+@import url('./__button/login__button.css');
+@import url('./__note/login__note.css');
+
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #000000;
+  width: 358px;
+  margin: 60px auto;
+  padding: 0;
+}
+
+.login:focus {
+  outline: none;
+}

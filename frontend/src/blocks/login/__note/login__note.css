@@ -1,0 +1,15 @@
+.login__note {
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 17px;
+  transition: opacity 0.5s;
+  text-decoration: none;
+}
+
+.login__note:hover {
+  opacity: .5;
+}

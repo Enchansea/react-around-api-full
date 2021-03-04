@@ -1,0 +1,9 @@
+.card__group {
+  position: relative;
+  text-decoration: none;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #ffffff;
+  height: 362px;
+  width: 282px;
+}

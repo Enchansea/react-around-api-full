@@ -1,26 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function Login (props) {
 
   const [ username, setUsername] = useState('');
   const [ password, setPassword ] = useState('');
 
-  const history = useHistory();
-
   function handleSubmit(e) {
     e.preventDefault();
     //console.log(username, password);
     props.handleLogin(username, password);
   }
-
-  // useEffect(() => {
-  //   if(localStorage.getItem('jwt')) {
-  //     history.push('/');
-  //   }
-  // }, [history])
-
-
 
   return (
     <div>

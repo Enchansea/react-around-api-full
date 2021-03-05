@@ -15,7 +15,6 @@ const getUsers = (req, res, next) => {
 };
 
 const getUser = (req, res, next) => {
-  console.log('req.params.id', req.params.id);
   User.findById(req.params.id)
     .then((user) => {
       if (!user) {
@@ -27,7 +26,6 @@ const getUser = (req, res, next) => {
 };
 
 const getCurrentUser = (req, res, next) => {
-  console.log('getCurrentUser', req.user._id);
   User.findById(req.user._id)
     .then((user) => {
       if (user) {
@@ -96,7 +94,6 @@ const login = (req, res, next) => {
       res.send({ token });
     })
     .catch((err) => {
-      console.log('err =>>>>>>>>', err);
       next(err);
     });
 };

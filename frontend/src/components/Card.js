@@ -6,15 +6,6 @@ function Card(props) {
 
   const currentUser = useContext(CurrentUserContext);
 
-  function handleLikeClick() {
-    props.onCardLike(props.card);
-    console.log('props.card', props.card);
-  };
-
-  function handleDeleteClick() {
-    props.onCardDelete(props.card)
-  }
-
   // Checking to see if I own the current card
   const isOwn = props.owner === currentUser._id;
 
@@ -23,13 +14,26 @@ function Card(props) {
     `card__delete-button ${isOwn ? 'card__remove-button_visible' : 'card__remove-button'}`
   );
 
+  console.log('props', props);
+
   // Check if the card was liked by the current users
-  const isLiked = props.likes.some(i => i._id === currentUser._id );
+  const isLiked = props.likes.some(i => i === currentUser._id );
+
 
   // Creating a variable for the like button
   const cardLikeButtonClassName = (
     `card__like-button ${isLiked ? 'card__like-button_clicked' : 'card__like-button'}`
   )
+
+   // handeling the like heart click of a card
+   function handleLikeClick() {
+    props.onCardLike(props.card);
+    // console.log('props.card', props.card);
+  };
+  // handeling the delete click of a card
+  function handleDeleteClick() {
+    props.onCardDelete(props.card)
+  }
 
   return (
 

@@ -48,9 +48,7 @@ class Api {
   }
 
   changeLikeCardStatus(cardId, like) {
-    console.log('cardId', cardId);
     if(like) {
-      console.log('like', like);
       return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
         headers: this._headers,
         method: "PUT",

@@ -15,6 +15,7 @@ const getUsers = (req, res, next) => {
 };
 
 const getUser = (req, res, next) => {
+  console.log('req.params.id', req.params.id);
   User.findById(req.params.id)
     .then((user) => {
       if (!user) {
@@ -23,6 +24,22 @@ const getUser = (req, res, next) => {
       res.send({ data: user });
     })
     .catch(next);
+};
+
+const getCurrentUser = (req, res, next) => {
+  console.log('getCurrentUser', req.user._id);
+  User.findById(req.user._id)
+    .then((user) => {
+      if (user) {
+        res.send(user._doc);
+      } else {
+        throw new NotFoundError('User does not exist');
+      }
+    })
+    .catch((err) => {
+      console.log('err!!', err);
+      next(err);
+    });
 };
 
 // eslint-disable-next-line consistent-return
@@ -61,9 +78,11 @@ const updateUser = (req, res, next) => {
 const login = (req, res, next) => {
   console.log('login');
   const { email, password } = req.body;
+
   if (!isEmail(email)) {
     throw new NotFoundError('incorrect email or password');
   }
+
   return User.findUserByCredentials(email, password)
     .then((user) => {
       if (!user) {
@@ -76,7 +95,10 @@ const login = (req, res, next) => {
       });
       res.send({ token });
     })
-    .catch(next);
+    .catch((err) => {
+      console.log('err =>>>>>>>>', err);
+      next(err);
+    });
 };
 
 module.exports = {
@@ -85,6 +107,7 @@ module.exports = {
   createUser,
   updateUser,
   login,
+  getCurrentUser,
 };
 
 // NODE_ENV === 'production' ? JWT_SECRET : 'Fd5Ic7sEcREtcOde'

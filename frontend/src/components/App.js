@@ -69,8 +69,6 @@ function App() {
 
       })
       .catch(err => console.log(err));
-
-
   }, [api])
 
   function handleTokenCheck() {
@@ -82,8 +80,9 @@ function App() {
           console.log('Error!');
         }
         setLoggedIn(true);
-        setUserEmail(res.data.email);
+        setUserEmail(res.email);
         setToken(jwt);
+        history.push('/');
       })
       .catch(err => console.log(err))
     }

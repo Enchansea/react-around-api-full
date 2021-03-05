@@ -14,11 +14,11 @@ function Login (props) {
     props.handleLogin(username, password);
   }
 
-  useEffect(() => {
-    if(localStorage.getItem('jwt')) {
-      history.push('/');
-    }
-  }, [history])
+  // useEffect(() => {
+  //   if(localStorage.getItem('jwt')) {
+  //     history.push('/');
+  //   }
+  // }, [history])
 
 
 

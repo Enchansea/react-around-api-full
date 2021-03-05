@@ -35,7 +35,6 @@ class Api {
       })
     })
       .then(res => res.ok ? res.json() : Promise.reject('Error' + res.statusText))
-    //.then(res => console.log("post", res))
   }
 
   //DELETE https://around.nomoreparties.co/v1/group-4/cards/cardId

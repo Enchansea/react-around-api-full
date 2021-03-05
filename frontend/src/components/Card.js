@@ -3,7 +3,7 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 
 function Card(props) {
-
+ console.log('props', props);
   const currentUser = useContext(CurrentUserContext);
 
   // Checking to see if I own the current card
@@ -14,11 +14,10 @@ function Card(props) {
     `card__delete-button ${isOwn ? 'card__remove-button_visible' : 'card__remove-button'}`
   );
 
-  console.log('props', props);
+  console.log("props.key", props.key);
 
   // Check if the card was liked by the current users
-  const isLiked = props.likes.some(i => i === currentUser._id );
-
+  const isLiked = props.card.likes.some(i => i === currentUser._id );
 
   // Creating a variable for the like button
   const cardLikeButtonClassName = (

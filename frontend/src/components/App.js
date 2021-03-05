@@ -58,6 +58,7 @@ function App() {
 
     api.getCardList()
       .then(res => {
+        console.log('list res', res);
         setCards(res.map((card) => ({
           link: card.link,
           name: card.name,

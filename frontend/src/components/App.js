@@ -135,6 +135,7 @@ function App() {
   }
 
   function handleAddPlace(name, link) {
+    debugger
     api.addCard({ name, link })
       .then((newCard) => {
         setCards([newCard, ...cards])

@@ -15,6 +15,7 @@ function AddCardPopup(props) {
   }
 
   function handleSubmit(e) {
+    console.log(props);
     e.preventDefault();
     props.onUpdateAddCard(
       name,

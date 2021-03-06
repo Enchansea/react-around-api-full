@@ -8,7 +8,6 @@ const getCards = (req, res) => Card.find({})
 
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
-  console.log('req.body', req.body);
   Card.create({ name, link, owner: req.user._id })
     .then((card) => {
       if (!card) {
@@ -30,8 +29,42 @@ const deleteCard = (req, res, next) => {
     .catch(next);
 };
 
+const addLike = (req, res, next) => {
+  const user = req.user._id;
+  Card.findById(req.params.cardId)
+    .then((card) => {
+      if (card.likes.includes(user)) {
+        throw new NotFoundError('already liked');
+      }
+      Card.findByIdAndUpdate(card._id,
+        { $addToSet: { likes: user } },
+        { new: true, runValidators: true })
+        // eslint-disable-next-line no-shadow
+        .then((card) => res.send(card));
+    })
+    .catch(next);
+};
+
+const removeLike = (req, res, next) => {
+  const user = req.user._id;
+  Card.findById(req.params.cardId)
+    .then((card) => {
+      if (!card.likes.includes(user)) {
+        throw new NotFoundError('not liked');
+      }
+      Card.findByIdAndUpdate(card._id,
+        { $pull: { likes: user } },
+        { new: true })
+        // eslint-disable-next-line no-shadow
+        .then((card) => res.send(card));
+    })
+    .catch(next);
+};
+
 module.exports = {
   getCards,
   createCard,
   deleteCard,
+  addLike,
+  removeLike,
 };

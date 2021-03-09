@@ -37,7 +37,7 @@ function App() {
 
   const api = useMemo(() => {
     return new Api({
-      baseUrl: "http://ness.students.nomoreparties.site",
+      baseUrl: "https://ness.students.nomoreparties.site",
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -155,12 +155,13 @@ function App() {
   }
 
   function handleUpdateAvatar(avatar) {
+    debugger
     api.setUserAvatar({ avatar })
       .then(() => {
         setCurrentUser({
           name: currentUser.name,
           about: currentUser.about,
-          avatar
+          avatar,
         })
       })
       .then(() => setIsEditAvatarOpen(false))

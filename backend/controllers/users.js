@@ -100,11 +100,7 @@ const login = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('incorrect email or password');
       }
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'Fd5Ic7sEcREtcOde', { expiresIn: 604800 });
-      res.cookie('jwt', token, {
-        maxAge: 360000 * 24 * 7,
-        httpOnly: true,
-      });
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'Fd5Ic7sEcREtcOde', { expiresIn: '7d' });
       res.send({ token });
     })
     .catch((err) => {

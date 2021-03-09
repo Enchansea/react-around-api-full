@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:3000";
+export const BASE_URL = "http://chow.students.nomoreparties.site";
 
 export const register = ( email, password ) => {
   console.log('signup');

@@ -37,7 +37,7 @@ function App() {
 
   const api = useMemo(() => {
     return new Api({
-      baseUrl: "http://localhost:3000",
+      baseUrl: "http://chow.students.nomoreparties.site",
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -117,7 +117,6 @@ function App() {
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i === currentUser._id);
     api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
-      console.log('here');
       const newCards = cards.map((c) => c._id === card._id ? newCard : c);
       setCards(newCards);
     })
@@ -242,7 +241,7 @@ function App() {
               handleCardClick={handleCardClick}
               onCardDelete={(card) => { handleCardDelete(card) }}
               handleCardDelete={handleCardDelete}
-              onCardLike={(card) => { handleCardLike(card) }}
+              onCardLike={handleCardLike}
               handleCardLike={handleCardLike}
               onClose={closeAllPopups}
                />

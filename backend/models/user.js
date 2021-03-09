@@ -14,12 +14,8 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
+    minlength: 8,
     reqired: true,
-    validate: {
-      // eslint-disable-next-line max-len
-      validator: (v) => validator.isStrongPassword(v, { minlength: 8, minNumbers: 1, minSymbols: 1 }),
-      message: 'Invalid password - minimum length: 8, minimum non alphanumeric characters: 1, min numbers: 1',
-    },
     select: false,
   },
   name: {
@@ -38,14 +34,14 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    required: true,
     validate: {
-      validator: (v) => validator.isURL(v, { protocols: ['http', 'https', 'ftp'], require_tld: true, require_protocol: true }),
+      validator: (v) => validator.isURL(v, [{ allow_underscores: true }]),
       message: 'field "avatar" must be a valid url-address',
     },
     default: 'https://pictures.s3.yandex.net/resources/avatar_1604080799.jpg',
   },
 });
+
 userSchema.statics.findUserByCredentials = function findUserByCredentials(email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {

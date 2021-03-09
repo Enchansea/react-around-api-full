@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -35,12 +36,10 @@ app.post('/signup', createUser);
 app.use(auth);
 app.use('/', cardRouter);
 app.use('/', userRouter);
-app.get('*', () => {
+app.get('*', (req, res) => {
   throw new NotFoundError('Requested resource not found');
 });
 app.use(errorLogger);
-
-// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res

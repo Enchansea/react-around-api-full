@@ -13,7 +13,7 @@ const createCard = (req, res, next) => {
       if (!card) {
         throw new BadRequestError('invalid data for creating card');
       }
-      res.send({ data: card });
+      res.send(card);
     })
     .catch(next);
 };
@@ -24,7 +24,7 @@ const deleteCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('card not found');
       }
-      res.send({ data: card });
+      res.send(card);
     })
     .catch(next);
 };

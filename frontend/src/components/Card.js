@@ -6,15 +6,12 @@ function Card(props) {
   const currentUser = useContext(CurrentUserContext);
   // Checking to see if I own the current card
   const isOwn = props.card.owner === currentUser._id;
-  console.log('props', props);
 
   // Creating a variable for the delete button
   const cardDeleteButtonClassName = (
     `card__delete-button ${isOwn ? 'card__remove-button_visible' : 'card__remove-button'}`
   );
 
-
-  console.log('propsLikes', props.card.likes);
   // Check if the card was liked by the current users
   const isLiked = props.card.likes.some(i => i === currentUser._id );
 

@@ -63,11 +63,27 @@ const createUser = (req, res, next) => {
 };
 
 const updateUser = (req, res, next) => {
-  User.findByIdAndUpdate(req.params.id, { name: req.params.name, about: req.params.about })
+  const { name, about } = req.body;
+  User.findByIdAndUpdate(req.user._id, { name, about },
+    { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         throw new NotFoundError('user not found');
-      } res.send({ data: user });
+      } res.status(200).send({ data: user });
+    })
+    .catch(next);
+};
+
+const updateAvatar = (req, res, next) => {
+  const { avatar } = req.body;
+  console.log('reqBody', req.body);
+  User.findByIdAndUpdate(req.user._id, { avatar },
+    { new: true, runValidators: true })
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('no such profile found');
+      }
+      res.status(200).send({ data: user });
     })
     .catch(next);
 };
@@ -103,6 +119,7 @@ module.exports = {
   updateUser,
   login,
   getCurrentUser,
+  updateAvatar,
 };
 
 // NODE_ENV === 'production' ? JWT_SECRET : 'Fd5Ic7sEcREtcOde'

@@ -1,6 +1,7 @@
 const Card = require('../models/card');
 const BadRequestError = require('../middlewares/errors/BadRequestError');
 const NotFoundError = require('../middlewares/errors/NotFoundError');
+const ForbiddenError = require('../middlewares/errors/ForbiddenError');
 
 const getCards = (req, res) => Card.find({})
   .then((cards) => res.status(200).send(cards))
@@ -23,6 +24,9 @@ const deleteCard = (req, res, next) => {
     .then((card) => {
       if (!card) {
         throw new NotFoundError('card not found');
+      }
+      if (String(card.owner) !== req.user._id) {
+        throw new ForbiddenError('unauthorized');
       }
       res.send(card);
     })

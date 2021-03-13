@@ -7,6 +7,8 @@ const cors = require('cors');
 
 const app = express();
 const bodyParser = require('body-parser');
+const { celebrate, Joi, errors } = require('celebrate');
+const rateLimit = require('express-rate-limit');
 const auth = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
@@ -24,15 +26,33 @@ mongoose.connect('mongodb://localhost:27017/aroundb', {
   useUnifiedTopology: true,
 });
 
+// Basic rate-limiting middleware. Limit repeated req to API's/endpoints
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+});
+
 app.use(cors());
 app.options('*', cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
 app.use(helmet());
+app.use(limiter);
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required,
+  }),
+}), login);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required,
+  }),
+}), createUser);
+
 app.use(auth);
 app.use('/', cardRouter);
 app.use('/', userRouter);
@@ -40,6 +60,7 @@ app.get('*', (req, res) => {
   throw new NotFoundError('Requested resource not found');
 });
 app.use(errorLogger);
+app.use(errors());
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res

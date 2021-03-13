@@ -4,8 +4,9 @@ const isEmail = require('validator/lib/isEmail');
 const User = require('../models/user');
 const NotFoundError = require('../middlewares/errors/NotFoundError');
 const BadRequestError = require('../middlewares/errors/BadRequestError');
+const UnauthorizedError = require('../middlewares/errors/UnauthorizedError');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+// const { NODE_ENV, JWT_SECRET } = process.env;
 const SALT_ROUND = 10;
 
 const getUsers = (req, res, next) => {
@@ -57,9 +58,14 @@ const createUser = (req, res, next) => {
             email: user.email,
           });
         })
-        .catch(next);
+        .catch((err) => {
+          if (err.code === 11000) {
+            res.status(409).send({ message: err.message });
+          }
+          throw new BadRequestError('user cannot be created');
+        });
     })
-    .catch(next);
+    .catch((next));
 };
 
 const updateUser = (req, res, next) => {
@@ -100,12 +106,15 @@ const login = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('incorrect email or password');
       }
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'Fd5Ic7sEcREtcOde', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, 'super-secret-token', { expiresIn: '7d' });
       res.send({ token });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(() => {
+      if (res.status(401)) {
+        throw new UnauthorizedError('incorrect email or password');
+      }
+    })
+    .catch(next);
 };
 
 module.exports = {

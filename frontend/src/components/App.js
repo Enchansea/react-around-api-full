@@ -37,7 +37,7 @@ function App() {
 
   const api = useMemo(() => {
     return new Api({
-      baseUrl: "https://api.ness.students.nomoreparties.site",
+      baseUrl: "http://api.ness.students.nomoreparties.site",
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

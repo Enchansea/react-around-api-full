@@ -6,4 +6,4 @@ This repository contains the full API of "Around the U.S." project that features
 * https://github.com/Enchansea/react-around-api-full
 
 * a link to the website that hosts my API.
-* https://chow.around.students.nomoreparties.site
+* https://ness.students.nomoreparties.site

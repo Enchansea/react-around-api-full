@@ -1,4 +1,4 @@
-export const BASE_URL = "http://api.ness.students.nomoreparties.site";
+export const BASE_URL = "https://api.ness.students.nomoreparties.site";
 
 export const register = ( email, password ) => {
 

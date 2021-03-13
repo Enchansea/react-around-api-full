@@ -17,6 +17,7 @@ const userRouter = require('./routers/users.js');
 const { login, createUser } = require('./controllers/users.js');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./middlewares/errors/NotFoundError');
+const InternalServerError = require('./middlewares/errors/InternalServerError');
 
 // connect to the MongoDB server
 mongoose.connect('mongodb://localhost:27017/aroundb', {
@@ -66,13 +67,9 @@ app.get('*', (req, res) => {
 app.use(errorLogger);
 app.use(errors());
 app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res
-    .status(statusCode)
-    .send({
-      // check the status and display a message based on it
-      message: statusCode === 500 ? 'An error occured on the server' : message,
-    });
+  if (res.status === 500) {
+    throw new InternalServerError('an error occured on the server');
+  }
 });
 
 app.listen(PORT, () => {

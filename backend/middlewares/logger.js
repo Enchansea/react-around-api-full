@@ -5,7 +5,7 @@ const expressWinston = require('express-winston');
 const requestLogger = expressWinston.logger({
   // transports is an array that you can write other destinations for your log
   transports: [
-    new winston.transports.File({ filename: 'request.log' }),
+    new winston.transports.File({ filename: 'WinstonErrors/request.log' }),
   ],
   // specify json format because its easy to parse
   format: winston.format.json(),

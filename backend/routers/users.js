@@ -10,13 +10,13 @@ const {
 userRouter.get('/users', getUsers);
 userRouter.get('/users/me', celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required.email(),
+    email: Joi.string().required().email(),
   }),
 }), getCurrentUser);
 
 userRouter.get('/users/:id', celebrate({
   params: Joi.object().keys({
-    _id: Joi.string().hex().length24.required(),
+    _id: Joi.string().hex().length(24).required(),
   }),
 }), getUser);
 
@@ -28,8 +28,8 @@ userRouter.patch('/users/me/avatar', celebrate({
 
 userRouter.patch('/users/me', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required.min(2).max(30),
-    about: Joi.string().required.min(2).max(30),
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().min(2).max(30),
   }),
 }), updateUser);
 

@@ -1,6 +1,7 @@
 export const BASE_URL = "http://api.ness.students.nomoreparties.site";
 
 export const register = ( email, password ) => {
+
     return fetch(`${BASE_URL}/signup`, {
         method: 'POST',
         headers: {

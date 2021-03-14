@@ -104,15 +104,10 @@ const login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('incorrect email or password');
+        throw new UnauthorizedError('incorrect email or password');
       }
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'Fd5Ic7sEcREtcOde', { expiresIn: '7d' });
       res.send({ token });
-    })
-    .catch(() => {
-      if (res.status(401)) {
-        throw new UnauthorizedError('incorrect email or password');
-      }
     })
     .catch(next);
 };

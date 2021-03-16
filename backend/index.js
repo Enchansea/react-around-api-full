@@ -67,9 +67,10 @@ app.get('*', (req, res) => {
 app.use(errorLogger);
 app.use(errors());
 app.use((err, req, res, next) => {
-  if (err.status === 500) {
-    throw new InternalServerError('an error occured on the server');
-  }
+  const { statusCode = 500, message } = err;
+  res.status(statusCode).send({
+    message: statusCode === 500 ? 'an error occured on the server' : message,
+  });
 });
 
 app.listen(PORT, () => {

@@ -17,7 +17,6 @@ const userRouter = require('./routers/users.js');
 const { login, createUser } = require('./controllers/users.js');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./middlewares/errors/NotFoundError');
-const InternalServerError = require('./middlewares/errors/InternalServerError');
 
 // connect to the MongoDB server
 mongoose.connect('mongodb://localhost:27017/aroundb', {

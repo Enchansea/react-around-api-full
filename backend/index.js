@@ -67,7 +67,7 @@ app.get('*', (req, res) => {
 app.use(errorLogger);
 app.use(errors());
 app.use((err, req, res, next) => {
-  if (res.status === 500) {
+  if (err.status === 500) {
     throw new InternalServerError('an error occured on the server');
   }
 });

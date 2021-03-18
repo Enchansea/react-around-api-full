@@ -65,7 +65,7 @@ const createUser = (req, res, next) => {
           throw new BadRequestError('user cannot be created');
         });
     })
-    .catch((next));
+    .catch(next);
 };
 
 const updateUser = (req, res, next) => {

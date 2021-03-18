@@ -2,3 +2,6 @@ node_modules
 *.log
 .env
 .eslintcache
+.cache
+/backend/.eslintcache
+/backend/WinstonErrors
